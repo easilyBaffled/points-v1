@@ -1,0 +1,15 @@
+{
+  "printWidth": 80,
+  "tabWidth": 4,
+  "useTabs": false,
+  "semi": true,
+  "singleQuote": true,
+  "trailingComma": "none",
+  "bracketSpacing": true,
+  "jsxBracketSameLine": false,
+  "overrides": [
+    {
+      "excludeFiles": ["test.md", "src/*.md", "**/*.md"]
+    }
+  ]
+}
