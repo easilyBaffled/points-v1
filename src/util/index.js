@@ -13,3 +13,7 @@ export const objToBitFlags = o =>
  * @returns {string}
  */
 export const bitView = n => n.toString( 2 );
+
+export const required = function ( name = 'value' ) {
+    throw Error( `${name} is required for this function` );
+}

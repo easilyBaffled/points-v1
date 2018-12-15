@@ -1,6 +1,8 @@
 import match from 'match-by';
 import _ from 'lodash';
 
+import { required as R } from '../index';
+
 const SITUATION_MATCHERS = {
     allFalse: 0,
     currentProjectOnly: 1,
@@ -8,27 +10,26 @@ const SITUATION_MATCHERS = {
 };
 
 export const allFalseReducers = {
-    projectStart: ({list, node}) => ({
+    projectStart: ( { list = R( 'list' ), node = R( 'node' ) } = R( 'properties' ) ) => ({
         list,
         currentProject: node,
         currentGroup: false
     }),
-    groupStart: ({list, node}) => ({
+    groupStart: ( { list = R( 'list' ), node = R( 'node' ) } = R( 'properties' ) ) => ({
         list,
         currentProject: false,
         currentGroup: node
     }),
-    _: ({ list, currentProject, currentGroup }) => ({ list, currentProject, currentGroup } )
+    _: ( {  list = R( ' list' ), currentProject = R( 'currentProject' ), currentGroup  = R( 'currentGroup ' ) } = R( 'properties' ) ) => ({ list, currentProject, currentGroup } )
 };
 
 export const currentProjectOnlyReducers = {
-    projectStart: ({ list, currentProject, node }) => ({
+    projectStart: ( {  list = R( ' list' ), currentProject = R( 'currentProject' ), node  = R( 'node ' ) } = R( 'properties' ) ) => ({
         list: list.concat(currentProject),
         currentProject: node,
         currentGroup: false
     }),
-    projectTerminal: ({ list, currentProject, currentGroup }) => ({
-        // TODO: Add situation where you have an open group
+    projectTerminal: ( {  list = R( ' list' ), currentProject = R( 'currentProject' ), currentGroup } = R( 'properties' ) ) => ({
         list: list.concat(
             currentGroup
                 ? updateParentWithNode(currentProject, currentGroup)
@@ -37,54 +38,50 @@ export const currentProjectOnlyReducers = {
         currentProject: false,
         currentGroup: false
     }),
-    groupStart: ({ list, currentProject, currentGroup, node }) => ({
+    groupStart: ( {  list = R( ' list' ), currentProject = R( 'currentProject' ), node  = R( 'node ' ) } = R( 'properties' ) ) => ({
         // TODO: Add situation where you have an open group
         list,
-        currentProject: currentGroup
-            ? updateParentWithNode(currentProject, currentGroup)
-            : currentProject,
+        currentProject: currentProject,
         currentGroup: node
     }),
-    _: ({ list, currentProject, node }) => ({
+    _: ( {  list = R( ' list' ), currentProject = R( 'currentProject' ), currentGroup = R( 'currentGroup' ), node  = R( 'node ' ) } = R( 'properties' ) ) => ({
         list,
         currentProject: updateParentWithNode(currentProject, node),
-        currentGroup: false
+        currentGroup
     })
 };
 
 export const bothReducers = {
-    projectStart: ({ list, currentProject, currentGroup, node }) => ({
+    projectStart: ( {  list = R( ' list' ), currentProject = R( 'currentProject' ), currentGroup = R( 'currentGroup' ), node  = R( 'node ' ) } = R( 'properties' ) ) => ({
         list: list.concat(updateParentWithNode(currentProject, currentGroup)),
         currentProject: node,
         currentGroup: false
     }),
-    projectTerminal: ({ list, currentProject, currentGroup }) => ({
+    projectTerminal: ( {  list = R( ' list' ), currentProject = R( 'currentProject' ), currentGroup  = R( 'currentGroup ' ) } = R( 'properties' ) ) => ({
         list: list.concat(updateParentWithNode(currentProject, currentGroup)),
         currentProject: false,
         currentGroup: false
     }),
-    groupStart: ({ list, currentProject, currentGroup, node }) => ({
-        list: list.concat(updateParentWithNode(currentProject, currentGroup)),
-        currentProject: currentGroup
-            ? updateParentWithNode(currentProject, currentGroup)
-            : currentProject,
+    groupStart: ( {  list = R( ' list' ), currentProject = R( 'currentProject' ), currentGroup = R( 'currentGroup' ), node  = R( 'node ' ) } = R( 'properties' ) ) => ({
+        list,
+        currentProject: updateParentWithNode(currentProject, currentGroup),
         currentGroup: node
     }),
-    groupTerminal: ({ list, currentProject, currentGroup, node }) => ({
-        list: list.concat(updateParentWithNode(currentProject, currentGroup)),
-        currentProject: updateParentWithNode(currentProject, node),
+    groupTerminal: ( {  list = R( ' list' ), currentProject = R( 'currentProject' ), currentGroup  = R( 'currentGroup ' ) } = R( 'properties' ) ) => ({
+        list,
+        currentProject: updateParentWithNode(currentProject, currentGroup),
         currentGroup: false
     }),
-    _: ({ list, currentProject, currentGroup, node }) => ({
+    _: ( {  list = R( ' list' ), currentProject = R( 'currentProject' ), currentGroup = R( 'currentGroup' ), node  = R( 'node ' ) } = R( 'properties' ) ) => ({
         list,
         currentProject,
         currentGroup: updateParentWithNode(currentGroup, node)
     })
 };
 
-const updateParentWithNode = (parent = { childNodes: [] }, childNode) => ({
+export const updateParentWithNode = (parent = { childNodes: [] }, childNode) => ({
     ...parent,
-    childNodes: parent.childNodes.concat(childNode)
+    childNodes: [ ...( parent.childNodes ) || [], childNode ]
 });
 
 export const matchers = {
