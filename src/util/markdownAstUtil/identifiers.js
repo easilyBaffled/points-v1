@@ -1,25 +1,47 @@
 import _ from 'lodash';
-import fp from 'lodash/fp';
-import match from 'match-by';
+
+/**
+ * @typedef AstNode
+ * @type {!object}
+ * @property {string} type;
+ * @property {number[]} position;
+ */
 
 /***********
  *  utils  *
  ***********/
-const getType = node => node.type;
 
-const getStartPosition = node => node.position.start.line;
-
-const getEndPosition = node => node.position.end.line;
-
+/**
+ *
+ * @param {object} matching
+ * @param {object} obj
+ * @returns {*}
+ */
 const objHasAll = (matching, obj) => _.matches(matching)(obj);
 
+/**
+ *
+ * @param {*} v
+ * @returns {*[]}
+ */
 const toArray = v => [].concat(v);
 
+/**
+ *
+ * @param {AstNode} node
+ * @returns {number[]}
+ */
 const getIndentation = node => node.position.indent;
 
 /********************
  *  external utils  *
  ********************/
+/**
+ * Converts a list of strings into a dictionary of prepared `is` functions
+ * So that it can be used as a the `testExpression` in `match`
+ * @param { string[] } keyStrings
+ * @returns {{[string]: ( string, AstNode ) => bool }}
+ */
 export const applyIs = (...keyStrings) =>
     keyStrings.reduce(({ acc, str }) => ({ [str]: n => is(str, n) }), {});
 
@@ -38,12 +60,6 @@ export const identifiers = {
 };
 
 /**
- * @typedef AstNode
- * @type {!object}
- * @property {string} type;
- */
-
-/**
  * A function that can determine if an AST node is of a given type
  *
  * @param {string} type
@@ -51,7 +67,7 @@ export const identifiers = {
  *
  * @return boolean
  */
-export const is = _.curry((type, astNode) => {
+export const is = (type, astNode) => {
     if (!(type in identifiers))
         throw TypeError(
             `is expects the first value to be one of [ ${Object.keys(
@@ -65,4 +81,4 @@ export const is = _.curry((type, astNode) => {
     return toArray(identifiers[type]).some(matcher =>
         _.isFunction(matcher) ? matcher(astNode) : objHasAll(matcher, astNode)
     );
-});
+}

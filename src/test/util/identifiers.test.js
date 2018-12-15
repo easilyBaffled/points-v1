@@ -1,7 +1,7 @@
-import markdownReader from '../src/util/markdownReader';
-import { identifiers, is } from '../src/util/markdownAstUtil/matchers';
+import markdownReader from '../../util/markdownReader';
+import { identifiers, is } from '../../util/markdownAstUtil/identifiers';
 
-const stripTabs = ([s]) => console.ident(s.replace(/(\t|    )/g, ''));
+const stripTabs = ([s]) => s.replace(/(\t|    )/g, '');
 
 const makeTestNode = markdownString =>
     markdownReader(markdownString).children[0];
@@ -111,7 +111,7 @@ describe('identifiers', () => {
 
                 - [ ] B
             `).children[2];
-            console.log(astNode);
+
             const actual = is('groupTerminal', astNode);
             const expected = true;
             expect(actual).toEqual(expected);

@@ -52,79 +52,7 @@ export const createGroupNode = nodeList => {
 const objToBitFlags = o =>
     Object.values(o).reduce((a, v, i) => (v ? a | (1 << i) : a), 0);
 
-const allFalseMatcher = match({
-    projectStart: (list, node) => ({
-        list,
-        currentProject: node,
-        currentGroup: false
-    }),
-    groupStart: (list, node) => ({
-        list,
-        currentProject: false,
-        currentGroup: node
-    }),
-    _: _.identity
-});
 
-const currentProjectOnlyMatcher = match({
-    projectStart: ({ list, currentProject, node }) => ({
-        list: list.concat(currentProject),
-        currentProject: node,
-        currentGroup: false
-    }),
-    projectTerminal: ({ list, currentProject, node }) => ({
-        // TODO: Add situation where you have an open group
-        list: list.concat(currentProject),
-        currentProject: false,
-        currentGroup: false
-    }),
-    groupStart: ({ list, currentProject, currentGroup, node }) => ({
-        // TODO: Add situation where you have an open group
-        list,
-        currentProject,
-        currentGroup: node
-    }),
-    _: ({ list, currentProject, node }) => ({
-        list,
-        currentProject: updateParentWithNode(currentProject, node),
-        currentGroup: false
-    })
-});
-
-const bothMatcher = match({
-    projectStart: ({ list, currentProject, currentGroup, node }) => ({
-        list: list.concat(updateParentWithNode(currentProject, currentGroup)),
-        currentProject: node,
-        currentGroup: false
-    }),
-    projectTerminal: ({ list, currentProject, currentGroup, node }) => ({
-        list: list.concat(updateParentWithNode(currentProject, currentGroup)),
-        currentProject: false,
-        currentGroup: false
-    }),
-    groupStart: ({ list, currentProject, currentGroup, node }) => ({
-        list: list.concat(updateParentWithNode(currentProject, currentGroup)),
-        currentProject: currentGroup
-            ? updateParentWithNode(currentProject, currentGroup)
-            : currentProject,
-        currentGroup: node
-    }),
-    groupTerminal: ({ list, currentProject, currentGroup, node }) => ({
-        list: list.concat(updateParentWithNode(currentProject, currentGroup)),
-        currentProject: updateParentWithNode(currentProject, node),
-        currentGroup: false
-    }),
-    _: ({ list, currentProject, currentGroup, node }) => ({
-        list,
-        currentProject,
-        currentGroup: updateParentWithNode(currentGroup, node)
-    })
-});
-
-const updateParentWithNode = (parent = { childNodes: [] }, childNode) => ({
-    ...parent,
-    childNodes: parent.childNodes.concat(childNode)
-});
 
 const bitGateMatch = match({
     0: allFalseMatcher(applyIs('projectStart', 'groupStart')),

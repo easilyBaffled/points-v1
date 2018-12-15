@@ -4,21 +4,18 @@
   "description": "",
   "keywords": [],
   "main": "src/index.js",
-  "jest": {
-    "setupFiles": "<rootDir>/test/setup.js"
-  },
   "dependencies": {
     "lodash": "4.17.11",
-    "match-by": "0.3.0",
-    "react": "16.5.2",
-    "react-dom": "16.5.2",
+    "match-by": "0.5.1",
+    "react": "16.6.3",
+    "react-dom": "16.6.3",
     "react-markdown": "latest",
-    "react-scripts": "2.0.3",
+    "react-scripts": "2.1.1",
     "remark": "10.0.1",
     "remark-parse": "6.0.3",
     "remark-preset-lint-markdown-style-guide": "2.1.2",
     "remark-task-list": "0.0.2",
-    "unified": "7.0.2",
+    "unified": "7.1.0",
     "vfile-reporter": "5.1.1"
   },
   "devDependencies": {},
