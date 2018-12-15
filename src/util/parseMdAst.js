@@ -5,55 +5,6 @@ import match from 'match-by';
 export const collectDetails = (...detailFunctions) => mdAst =>
     mdAst.children.map(node => detailFunctions.map(f => f(node)));
 
-// export const collectPosition = collectDetails(
-//     getType,
-//     getStartPosition,
-//     getEndPosition
-// );
-
-const findProjectHeaderIndex = fp.findIndex({ type: 'heading', depth: 1 });
-const findLineBreakIndex = fp.findIndex({ type: 'thematicBreak' });
-
-export const findProjectNodes = nodeList => {
-    const startingNodeIndex = findProjectHeaderIndex(nodeList);
-    const endingNodeIndex = findLineBreakIndex(nodeList);
-
-    return nodeList.slice(startingNodeIndex, endingNodeIndex);
-};
-
-export const createProjectNode = nodeList => {
-    const [projectHeader, ...projectNodes] = findProjectNodes(nodeList);
-    return { ...projectHeader, projectNodes };
-};
-
-const findGroupHeaderIndex = fp.findIndex({ type: 'heading', depth: 3 });
-const findGroupTerminal = (nodeList, startingIndex) =>
-    nodeList
-        .slice(startingIndex + 1)
-        .reduce(
-            (group, node) =>
-                console.ident(
-                    getStartPosition(node) - getEndPosition(_.last(group)),
-                    `${getStartPosition(node)}-${getEndPosition(
-                        node
-                    )} ${getEndPosition(_.last(group))}`
-                ) === 1
-                    ? [...group, node]
-                    : group,
-            [nodeList[startingIndex]]
-        );
-
-export const createGroupNode = nodeList => {
-    const groupIndex = findGroupHeaderIndex(nodeList);
-    const groupTerminal = findGroupTerminal(nodeList, groupIndex);
-    console.log(groupTerminal);
-};
-
-const objToBitFlags = o =>
-    Object.values(o).reduce((a, v, i) => (v ? a | (1 << i) : a), 0);
-
-
-
 const bitGateMatch = match({
     0: allFalseMatcher(applyIs('projectStart', 'groupStart')),
     1: currentProjectOnlyMatcher(

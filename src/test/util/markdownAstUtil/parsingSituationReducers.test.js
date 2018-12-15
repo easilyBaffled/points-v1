@@ -1,4 +1,4 @@
-import { updateParentWithNode, allFalseReducers, currentProjectOnlyReducers, bothReducers } from '../../util/markdownAstUtil/parsingSituationReducers'
+import { updateParentWithNode, allFalseReducers, currentProjectOnlyReducers, bothReducers } from '../../../util/markdownAstUtil/parsingSituationReducers'
 
 const nodeList = [];
 const projectNode = { type: 'header', depth: 1, id: 0 };

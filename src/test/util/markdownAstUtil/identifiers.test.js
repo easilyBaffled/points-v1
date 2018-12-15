@@ -1,5 +1,5 @@
-import markdownReader from '../../util/markdownReader';
-import { identifiers, is } from '../../util/markdownAstUtil/identifiers';
+import markdownReader from '../../../util/markdownReader';
+import { identifiers, is } from '../../../util/markdownAstUtil/identifiers';
 
 const stripTabs = ([s]) => s.replace(/(\t|    )/g, '');
 

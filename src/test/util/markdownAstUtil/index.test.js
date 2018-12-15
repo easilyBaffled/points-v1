@@ -1,5 +1,5 @@
 import match from 'match-by';
-import { objToBitFlags, bitView } from '../../util';
+import { objToBitFlags, bitView } from '../../../util';
 
 
 const emptyObject = { a: 0, b: null, c: false, d: '', e: undefined };

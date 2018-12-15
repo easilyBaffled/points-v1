@@ -79,6 +79,32 @@ export const bothReducers = {
     })
 };
 
+/**
+ * @typedef ParsingPayload
+ * @type {!Object}
+ * @property {(Object|Parent)[]} list;
+ * @property {(Object|Parent)} currentProject;
+ * @property {(Object|Parent)} currentGroup;
+ * @property {Object} node;
+ */
+
+/**
+ * @param {Object} childNode
+ * @returns {Parent}
+ */
+
+/**
+ * @typedef Parent
+ * @type {!Object}
+ * @property {Object[]} childNodes;
+ */
+
+/**
+ *
+ * @param {(Object|Parent)} parent
+ * @param {Object} childNode
+ * @returns {Parent}
+ */
 export const updateParentWithNode = (parent = { childNodes: [] }, childNode) => ({
     ...parent,
     childNodes: [ ...( parent.childNodes ) || [], childNode ]
@@ -88,4 +114,4 @@ export const matchers = {
     allFalse: match( allFalseReducers ),
     currentProjectOnly: match( currentProjectOnlyReducers ),
     both: match( bothReducers )
-}
+};
