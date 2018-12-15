@@ -25,62 +25,38 @@ const parsingFunctions = [
     currentProjectOnlyReducers._,
     currentProjectOnlyReducers.groupStart,
     bothReducers._,
-    bothReducers._,
     bothReducers.groupStart,
     bothReducers._,
     bothReducers.projectTerminal,
 ];
 
-test( 'force parse', () => {
-    markdownAst.reduce( ( parsed, node, i ) => {
+test( 'test full parse', () => {
+    const actual = markdownAst.reduce( ( parsed, node, i ) => {
         const currentFunction = parsingFunctions[ i ];
-        console.log( Object.keys( parsingFunctions )[ i ], { parsed, node } );
         return currentFunction( { ...parsed, node } );
     }, { list: [] } );
+
+    const expected = {
+        list: [
+            {
+                type: 'heading',
+                depth: 1,
+                childNodes: [
+                    { type: 'list' },
+                    {
+                        type: 'heading',
+                        depth: 3,
+                        childNodes: [ { type: 'list' } ]
+                    },
+                    {
+                        type: 'heading',
+                        depth: 3,
+                        childNodes: [ { type: 'paragraph' } ]
+                    }
+                ]
+            }
+        ]
+    };
+
+    expect( actual ).toMatchObject( expected );
 } );
-/*
-* Given
-* [
-*   projectStart
-*   task
-*   groupstart
-*   task
-*   task
-*   groupstart
-*   text
-*   projecterminal
-* ]
-*
-* it should go as
-* allFalseReducers.projectStart
-* currentProjectOnlyReducers._
-* currentProjectOnlyReducers.groupStart
-* bothReducers._
-* bothReducers._
-* bothReducers.groupStart
-* bothReducers._
-* bothReducers.projectTerminal
-*
-* which should output
-*
-* {
-*   ProjectHeader,
-*   childNodes: [
-*       task,
-*       {
-*           GroupHeader,
-*           childNodes: [
-*               task,
-*               task,
-*           ]
-*       },
-*       {
-*           GroupHeader,
-*           childNodes: [
-*               text,
-*           ]
-*       }
-*   ]
-*
-* }
-* */
