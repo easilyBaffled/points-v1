@@ -73,8 +73,8 @@ export const currentGroupOnlyReducers = {
         currentProject: false,
         currentGroup: node
     }),
-    groupTerminal: ( {  list = R( ' list' ), currentGroup  = R( 'currentGroup ' ), node = R( 'node ' )  } = R( 'properties' ) ) => ({
-        list: list.concat(currentGroup).concat( node ),
+    groupTerminal: ( {  list = R( ' list' ), currentGroup  = R( 'currentGroup ' ) } = R( 'properties' ) ) => ({
+        list: list.concat(currentGroup),
         currentProject: false,
         currentGroup: false
     }),
@@ -109,7 +109,7 @@ export const bothReducers = {
     _: ( {  list = R( ' list' ), currentProject = R( 'currentProject' ), currentGroup = R( 'currentGroup' ), node  = R( 'node ' ) } = R( 'properties' ) ) => ({
         list,
         currentProject,
-        currentGroup: console.ident( updateParentWithNode( console.ident( currentGroup, 'group' ), console.ident( node, 'node') ), 'RESULT' )
+        currentGroup: updateParentWithNode( currentGroup, node )
     })
 };
 

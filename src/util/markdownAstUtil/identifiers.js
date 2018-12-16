@@ -55,12 +55,10 @@ export const applyIs = ( node, keyStrings) =>
 export const identifiers = {
     projectStart: { type: 'heading', depth: 1 },
     projectTerminal: [{ type: 'thematicBreak' }, { type: 'heading', depth: 1 }],
-    groupStart: { type: 'heading', depth: 3 },
-    groupTerminal: [
-        { type: 'thematicBreak' },
-        ( { type, depth, children } ) => type === 'heading' && depth === 3 && children.length > 0,
-        ( { type, depth, children } ) => type === 'heading' && depth === 3 && children.length === 0
-    ],
+    groupStart: ( { type, depth, children } ) =>
+        type === 'heading' && depth === 3 && children.length > 0,
+    groupTerminal: ( { type, depth, children } ) =>
+        type === 'heading' && depth === 3 && children.length === 0,
     _: () => false
 };
 

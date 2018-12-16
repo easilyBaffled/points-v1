@@ -2,8 +2,11 @@ import _ from 'lodash';
 import fp from 'lodash/fp';
 import match from 'match-by';
 
-import { applyIs } from './markdownAstUtil/parsingSituationReducers';
+
 import {
+    currentProjectOnlyReducers,
+    currentGroupOnlyReducers,
+    bothReducers,
     SITUATION_MATCHERS,
     preparedMatchers
 } from './markdownAstUtil/parsingSituationReducers';
@@ -20,13 +23,17 @@ export const bitFlagSituationMatcher = match( {
     [ SITUATION_MATCHERS.bothReducers ]: () => preparedMatchers.both
 } ) ;
 
-export const compileNotes = nodeList =>
-    nodeList.reduce(
-        ({ list, ...status }, node) => {
+const bitFlagCleanUpMatcher = match( {
+    [ SITUATION_MATCHERS.allFalse ]: () => ( { list } ) => list,
+    [ SITUATION_MATCHERS.currentProjectOnly ]: () => currentProjectOnlyReducers.projectTerminal,
+    [ SITUATION_MATCHERS.currentGroupOnly ]: () => currentGroupOnlyReducers.groupTerminal,
+    [ SITUATION_MATCHERS.bothReducers ]: () => bothReducers.projectTerminal
+} );
+
+export const compileNotes = nodeList => {
+    const { list, ...status } = nodeList.reduce(
+        ( { list, ...status }, node ) => {
             const bitKey = objToBitKey( status );
-            console.log( `${bitKey} -> ${node.type}` );
-            if ( node.type === 'paragraph' )
-                console.log( node )
             const situationMatcher = bitFlagSituationMatcher( bitKey );
             const situationReducer = situationMatcher( node );
 
@@ -37,4 +44,10 @@ export const compileNotes = nodeList =>
             } );
         },
         { list: [], currentProject: false, currentGroup: false }
-    ).list;
+    );
+
+    const bitKey = objToBitKey( status );
+    const finalResolution = bitFlagCleanUpMatcher( bitKey );
+    return finalResolution( { list, ...status } )
+};
+

@@ -117,7 +117,7 @@ test( 'Lists and Groups and lists', () => {
           - [ ] task id:4
           - [ ] task id:5
           
-        
+        ###
         - [ ] task id:4
         - [ ] task id:5
         
@@ -126,7 +126,7 @@ test( 'Lists and Groups and lists', () => {
           - [ ] task id:4
           - [ ] task id:5
                     
-        
+        ###
         - [ ] task id:4
         - [ ] task id:5
     `;
@@ -137,13 +137,16 @@ test( 'Lists and Groups and lists', () => {
         allFalseReducers.groupStart,
         currentGroupOnlyReducers._,
         currentGroupOnlyReducers.groupTerminal,
+        allFalseReducers._,
         allFalseReducers.groupStart,
         currentGroupOnlyReducers._,
-        currentGroupOnlyReducers.groupTerminal
+        currentGroupOnlyReducers.groupTerminal,
+        allFalseReducers._,
     ];
 
     const actual = markdownAst.reduce( ( parsed, node, i ) => {
         const currentFunction = parsingFunctions[ i ];
+        console.log( i, currentFunction )
         return currentFunction( { ...parsed, node } );
     }, { list: [] } );
 
@@ -169,7 +172,7 @@ test( 'Lists and Groups and lists', () => {
 } );
 
 describe( 'compileNotes', () => {
-    test.only( 'Project with Groups', () => {
+    test( 'Project with Groups', () => {
         const markdownString = removeTabs`
         # Project id:1
         
@@ -208,6 +211,84 @@ describe( 'compileNotes', () => {
                     }
                 ]
             }
+        ];
+
+        expect( actual ).toMatchObject( expected );
+    } );
+
+    test( 'Just Groups', () => {
+        const markdownString = removeTabs`       
+        ### Group id:3
+        
+          - [ ] task id:4
+          - [ ] task id:5
+        
+        ### Group id:6
+        
+          - [ ] task id:4
+          - [ ] task id:5
+    `;
+
+        const markdownAst = markdownReader( markdownString ).children;
+        const actual = compileNotes( markdownAst );
+
+        const expected = {
+            list: [
+                {
+                    type: 'heading',
+                    depth: 3,
+                    childNodes: [ { type: 'list' } ]
+                },
+                {
+                    type: 'heading',
+                    depth: 3,
+                    childNodes: [ { type: 'list' } ]
+                }
+            ]
+        };
+
+        expect( actual ).toMatchObject( expected );
+    } );
+
+    test( 'Lists and Groups and lists', () => {
+        const markdownString = removeTabs`       
+        - [ ] task id:4
+        - [ ] task id:5
+        
+        ### Group id:3       
+          - [ ] task id:4
+          - [ ] task id:5
+          
+        ###
+        - [ ] task id:4
+        - [ ] task id:5
+        
+        ### Group id:6
+
+          - [ ] task id:4
+          - [ ] task id:5
+                    
+        ###
+        - [ ] task id:4
+        - [ ] task id:5
+    `;
+        const markdownAst = markdownReader( markdownString ).children;
+        const actual = compileNotes( markdownAst );
+
+        const expected = [
+            { type: 'list' },
+            {
+                type: 'heading',
+                depth: 3,
+                childNodes: [ { type: 'list' } ]
+            },
+            { type: 'list' },
+            {
+                type: 'heading',
+                depth: 3,
+                childNodes: [ { type: 'list' } ]
+            },
+            { type: 'list' }
         ];
 
         expect( actual ).toMatchObject( expected );

@@ -73,42 +73,21 @@ describe('identifiers', () => {
     });
 
     describe('groupTerminal', () => {
-        test('break', () => {
-            const astNode = makeTestNode(md.break);
+        test('group close', () => {
+            const astNode = makeTestNode('###');
             const actual = is('groupTerminal', astNode);
             const expected = true;
             expect(actual).toEqual(expected);
         });
 
-        test('project', () => {
-            const astNode = makeTestNode(md.projectHeading);
-            const actual = is('groupTerminal', astNode);
-            const expected = true;
-            expect(actual).toEqual(expected);
-        });
-
-        test('groupHeading', () => {
-            const astNode = makeTestNode(md.groupHeading);
-            const actual = is('groupTerminal', astNode);
-            const expected = true;
-            expect(actual).toEqual(expected);
-        });
-
-        test('new indent - listItem', () => {
-            const astNode = makeTestNode(md.listItem);
-            const actual = is('groupTerminal', astNode);
-            const expected = true;
-            expect(actual).toEqual(expected);
-        });
-
-        test('new indent - extra proof', () => {
+        test('group close - extra proof', () => {
             const astNode = markdownReader(stripTabs`
                 ### [ ∀ ] All or Nothing Group Task: Group Reward
 
                   - [ ] A
                   - [ ] B
 
-
+                ###
                 - [ ] B
             `).children[2];
 
