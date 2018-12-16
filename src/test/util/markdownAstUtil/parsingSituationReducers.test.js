@@ -5,7 +5,7 @@ const projectNode = { type: 'header', depth: 1, id: 0 };
 const newProjectNode = { type: 'header', depth: 1, id: 1 };
 const groupNode = { type: 'header', depth: 3, id: 2 };
 const newGroupNode = { type: 'header', depth: 3, id: 3 };
-const anythingElse = { type: '', id: 4 }
+const anythingElse = { type: '', id: 4 };
 
 describe( 'allFalseReducers', () => {
     test('projectStart', () => {
@@ -39,12 +39,11 @@ describe( 'allFalseReducers', () => {
     test('default', () => {
         const actual = allFalseReducers._( {
             list: nodeList,
-            currentProject: false,
-            currentGroup: false,
+            node: anythingElse
         } );
 
         const expected = {
-            list: nodeList,
+            list: [ ...nodeList, anythingElse ],
             currentProject: false,
             currentGroup: false
         };
@@ -226,7 +225,7 @@ describe( 'updateParentWithNode', () => {
         const expected = {
             id: 1,
             childNodes: [ { id: 2 } ]
-        }
+        };
         expect(actual).toEqual(expected);
     } ),
     test( 'expecting parent', () => {
@@ -238,7 +237,7 @@ describe( 'updateParentWithNode', () => {
         const expected = {
             id: 1,
             childNodes: [ { id: 2 }, { id: 3 } ]
-        }
+        };
         expect(actual).toEqual(expected);
     } )
-} )
+} );

@@ -2,38 +2,39 @@ import _ from 'lodash';
 import fp from 'lodash/fp';
 import match from 'match-by';
 
-export const collectDetails = (...detailFunctions) => mdAst =>
-    mdAst.children.map(node => detailFunctions.map(f => f(node)));
+import { applyIs } from './markdownAstUtil/parsingSituationReducers';
+import {
+    SITUATION_MATCHERS,
+    preparedMatchers
+} from './markdownAstUtil/parsingSituationReducers';
+import { objToBitKey } from './index';
 
-const bitGateMatch = match({
-    0: allFalseMatcher(applyIs('projectStart', 'groupStart')),
-    1: currentProjectOnlyMatcher(
-        applyIs('projectStart', 'projectTerminal', 'groupStart')
-    ),
-    // 2: 'currentGroup only',
-    3: bothMatcher(
-        applyIs(
-            'projectStart',
-            'projectTerminal',
-            'groupStart',
-            'groupTerminal'
-        )
-    ),
-    _: _.identity
-});
+/**
+ * Takes the current parsing situation ( are we within a group, within a project, within a group within a project, or top level )
+ * And returns a set of functions to identify the node for that situation that can be used as the `testExpression` in a `match` function.
+ */
+export const bitFlagSituationMatcher = match( {
+    [ SITUATION_MATCHERS.allFalse ]: () => preparedMatchers.allFalse,
+    [ SITUATION_MATCHERS.currentProjectOnly ]: () => preparedMatchers.currentProjectOnly,
+    [ SITUATION_MATCHERS.currentGroupOnly ]: () => preparedMatchers.currentGroupOnly,
+    [ SITUATION_MATCHERS.bothReducers ]: () => preparedMatchers.both
+} ) ;
 
-export const compileNotes = nodeList => {
+export const compileNotes = nodeList =>
     nodeList.reduce(
         ({ list, ...status }, node) => {
-            const bitKey = objToBitFlags(status);
-            const paringFunc = bitGateMatch(bitKey);
-            // return paringFunc( { list, ...status, node } )
-            // If all false then if its a project, flip project, if it's a gorup flip current group
+            const bitKey = objToBitKey( status );
+            console.log( `${bitKey} -> ${node.type}` );
+            if ( node.type === 'paragraph' )
+                console.log( node )
+            const situationMatcher = bitFlagSituationMatcher( bitKey );
+            const situationReducer = situationMatcher( node );
 
-            return { list, ...status };
+            return situationReducer( {
+                list,
+                ...status,
+                node
+            } );
         },
         { list: [], currentProject: false, currentGroup: false }
-    );
-};
-
-console.log(test, bitGateMatch(objToBitFlags(test)));
+    ).list;

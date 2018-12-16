@@ -39,11 +39,15 @@ const getIndentation = node => node.position.indent;
 /**
  * Converts a list of strings into a dictionary of prepared `is` functions
  * So that it can be used as a the `testExpression` in `match`
+ * @param { AstNode } node
  * @param { string[] } keyStrings
- * @returns {{[string]: ( string, AstNode ) => bool }}
+ * @returns {{[string]: bool }}
  */
-export const applyIs = (...keyStrings) =>
-    keyStrings.reduce(({ acc, str }) => ({ [str]: n => is(str, n) }), {});
+export const applyIs = ( node, keyStrings) =>
+    keyStrings.reduce(( acc, str ) => ({
+        ...acc,
+        [str]: is( str, node)
+    }), {});
 
 /****************
  *  identifiers  *
@@ -54,9 +58,10 @@ export const identifiers = {
     groupStart: { type: 'heading', depth: 3 },
     groupTerminal: [
         { type: 'thematicBreak' },
-        { type: 'heading', depth: 3 },
-        node => getIndentation(node).length === 0
-    ]
+        ( { type, depth, children } ) => type === 'heading' && depth === 3 && children.length > 0,
+        ( { type, depth, children } ) => type === 'heading' && depth === 3 && children.length === 0
+    ],
+    _: () => false
 };
 
 /**
@@ -82,3 +87,5 @@ export const is = (type, astNode) => {
         _.isFunction(matcher) ? matcher(astNode) : objHasAll(matcher, astNode)
     );
 }
+
+

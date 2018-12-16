@@ -4,7 +4,7 @@
  * @param {Object} o
  * @returns {Number}
  */
-export const objToBitFlags = o =>
+export const objToBitKey = o =>
     Object.values(o).reduce((a, v, i) => (v ? a | (1 << i) : a), 0);
 
 /**
@@ -16,4 +16,12 @@ export const bitView = n => n.toString( 2 );
 
 export const required = function ( name = 'value' ) {
     throw Error( `${name} is required for this function` );
-}
+};
+
+/**
+ *
+ * @param {str} str
+ * @returns {str}
+ */
+export const removeTabs = ( [ str ] ) =>
+    str.replace( /(\t|    )/g, '' );

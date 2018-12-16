@@ -2,10 +2,12 @@ import match from 'match-by';
 import _ from 'lodash';
 
 import { required as R } from '../index';
+import { applyIs } from './identifiers';
 
-const SITUATION_MATCHERS = {
+export const SITUATION_MATCHERS = {
     allFalse: 0,
     currentProjectOnly: 1,
+    currentGroupOnly: 2,
     bothReducers: 3
 };
 
@@ -20,7 +22,11 @@ export const allFalseReducers = {
         currentProject: false,
         currentGroup: node
     }),
-    _: ( {  list = R( ' list' ), currentProject = R( 'currentProject' ), currentGroup  = R( 'currentGroup ' ) } = R( 'properties' ) ) => ({ list, currentProject, currentGroup } )
+    _: ( {  list = R( ' list' ), node = R( 'node' ) } = R( 'properties' ) ) => ({
+        list: list.concat( node ),
+        currentProject: false,
+        currentGroup: false
+    } )
 };
 
 export const currentProjectOnlyReducers = {
@@ -51,6 +57,34 @@ export const currentProjectOnlyReducers = {
     })
 };
 
+export const currentGroupOnlyReducers = {
+    projectStart: ( {  list = R( ' list' ), currentGroup = R( 'currentGroup' ), node  = R( 'node ' ) } = R( 'properties' ) ) => ({
+        list: list.concat(currentGroup),
+        currentProject: node,
+        currentGroup: false
+    }),
+    projectTerminal: ( {  list = R( ' list' ), currentGroup  = R( 'currentGroup ' ) } = R( 'properties' ) ) => ({
+        list: list.concat(currentGroup),
+        currentProject: false,
+        currentGroup: false
+    }),
+    groupStart: ( {  list = R( ' list' ), currentGroup = R( 'currentGroup' ), node  = R( 'node ' ) } = R( 'properties' ) ) => ({
+        list: list.concat(currentGroup),
+        currentProject: false,
+        currentGroup: node
+    }),
+    groupTerminal: ( {  list = R( ' list' ), currentGroup  = R( 'currentGroup ' ), node = R( 'node ' )  } = R( 'properties' ) ) => ({
+        list: list.concat(currentGroup).concat( node ),
+        currentProject: false,
+        currentGroup: false
+    }),
+    _: ( {  list = R( ' list' ), currentGroup = R( 'currentGroup' ), node  = R( 'node ' ) } = R( 'properties' ) ) => ({
+        list,
+        currentProject: false,
+        currentGroup: updateParentWithNode(currentGroup, node)
+    })
+};
+
 export const bothReducers = {
     projectStart: ( {  list = R( ' list' ), currentProject = R( 'currentProject' ), currentGroup = R( 'currentGroup' ), node  = R( 'node ' ) } = R( 'properties' ) ) => ({
         list: list.concat(updateParentWithNode(currentProject, currentGroup)),
@@ -75,7 +109,7 @@ export const bothReducers = {
     _: ( {  list = R( ' list' ), currentProject = R( 'currentProject' ), currentGroup = R( 'currentGroup' ), node  = R( 'node ' ) } = R( 'properties' ) ) => ({
         list,
         currentProject,
-        currentGroup: updateParentWithNode(currentGroup, node)
+        currentGroup: console.ident( updateParentWithNode( console.ident( currentGroup, 'group' ), console.ident( node, 'node') ), 'RESULT' )
     })
 };
 
@@ -110,8 +144,18 @@ export const updateParentWithNode = (parent = { childNodes: [] }, childNode) => 
     childNodes: [ ...( parent.childNodes ) || [], childNode ]
 });
 
-export const matchers = {
-    allFalse: match( allFalseReducers ),
-    currentProjectOnly: match( currentProjectOnlyReducers ),
-    both: match( bothReducers )
+console.ident = ( v, l ) => ( console.log( l, v ), v );
+
+const constructMatcher = reducers => node => match(
+    _.reduce( reducers, ( acc, v, k ) => ( {
+       ...acc,
+       [ k ]: () => ( console.log(k), v ) // match automatically calls a function, so this will wrap the reducer so it is not called before it can be passed the payload
+    } ), {}),
+    applyIs( node, Object.keys( reducers ) )
+);
+export const preparedMatchers = {
+    allFalse: constructMatcher( allFalseReducers ),
+    currentProjectOnly: constructMatcher( currentProjectOnlyReducers ),
+    currentGroupOnly: constructMatcher( currentGroupOnlyReducers ),
+    both: constructMatcher( bothReducers ),
 };
