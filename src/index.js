@@ -4,7 +4,7 @@ import ReactMarkdown from 'react-markdown';
 
 import './styles.css';
 import { polyfill } from './util/console.ident';
-import markdownReader, { lint, tabsToSpaces } from './util/markdownReader';
+import markdownReader, { lint, tabsToSpaces } from './markdownReader';
 
 import test from './test.md';
 

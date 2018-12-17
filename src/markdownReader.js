@@ -1,8 +1,8 @@
 import unified from 'unified';
 import markdown from 'remark-parse';
-var report = require('vfile-reporter');
-var remark = require('remark');
-var styleGuide = require('remark-preset-lint-markdown-style-guide');
+import report from 'vfile-reporter';
+import remark from 'remark';
+import styleGuide from 'remark-preset-lint-markdown-style-guide';
 
 export default markdownString =>
     unified()

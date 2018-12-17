@@ -1,4 +1,9 @@
-import { updateParentWithNode, allFalseReducers, currentProjectOnlyReducers, bothReducers } from '../../../util/markdownAstUtil/parsingSituationReducers'
+import {
+    updateParentWithNode,
+    allFalseReducers,
+    currentProjectOnlyReducers,
+    bothReducers
+} from '../../markdownASTParser/parsingSituationReducers';
 
 const nodeList = [];
 const projectNode = { type: 'header', depth: 1, id: 0 };
@@ -7,12 +12,12 @@ const groupNode = { type: 'header', depth: 3, id: 2 };
 const newGroupNode = { type: 'header', depth: 3, id: 3 };
 const anythingElse = { type: '', id: 4 };
 
-describe( 'allFalseReducers', () => {
+describe('allFalseReducers', () => {
     test('projectStart', () => {
-        const actual = allFalseReducers.projectStart( {
+        const actual = allFalseReducers.projectStart({
             list: nodeList,
             node: projectNode
-        } );
+        });
 
         const expected = {
             list: nodeList,
@@ -23,10 +28,10 @@ describe( 'allFalseReducers', () => {
         expect(actual).toEqual(expected);
     });
     test('groupStart', () => {
-        const actual = allFalseReducers.groupStart( {
+        const actual = allFalseReducers.groupStart({
             list: nodeList,
             node: groupNode
-        } );
+        });
 
         const expected = {
             list: nodeList,
@@ -37,31 +42,31 @@ describe( 'allFalseReducers', () => {
         expect(actual).toEqual(expected);
     });
     test('default', () => {
-        const actual = allFalseReducers._( {
+        const actual = allFalseReducers._({
             list: nodeList,
             node: anythingElse
-        } );
+        });
 
         const expected = {
-            list: [ ...nodeList, anythingElse ],
+            list: [...nodeList, anythingElse],
             currentProject: false,
             currentGroup: false
         };
 
         expect(actual).toEqual(expected);
     });
-} );
+});
 
-describe( 'currentProjectOnlyReducers', () => {
+describe('currentProjectOnlyReducers', () => {
     test('projectStart', () => {
-        const actual = currentProjectOnlyReducers.projectStart( {
+        const actual = currentProjectOnlyReducers.projectStart({
             list: nodeList,
             currentProject: projectNode,
             node: newProjectNode
-        } );
+        });
 
         const expected = {
-            list: [ ...nodeList, projectNode ],
+            list: [...nodeList, projectNode],
             currentProject: newProjectNode,
             currentGroup: false
         };
@@ -69,14 +74,14 @@ describe( 'currentProjectOnlyReducers', () => {
         expect(actual).toEqual(expected);
     });
     test('projectTerminal - with open group', () => {
-        const actual = currentProjectOnlyReducers.projectTerminal( {
+        const actual = currentProjectOnlyReducers.projectTerminal({
             list: nodeList,
             currentProject: projectNode,
-            currentGroup: groupNode,
-        } );
+            currentGroup: groupNode
+        });
 
         const expected = {
-            list: [ ...nodeList, { ...projectNode, childNodes: [ groupNode ] } ],
+            list: [...nodeList, { ...projectNode, childNodes: [groupNode] }],
             currentProject: false,
             currentGroup: false
         };
@@ -84,13 +89,13 @@ describe( 'currentProjectOnlyReducers', () => {
         expect(actual).toEqual(expected);
     });
     test('projectTerminal no group', () => {
-        const actual = currentProjectOnlyReducers.projectTerminal( {
+        const actual = currentProjectOnlyReducers.projectTerminal({
             list: nodeList,
-            currentProject: projectNode,
-        } );
+            currentProject: projectNode
+        });
 
         const expected = {
-            list: [ ...nodeList, projectNode ],
+            list: [...nodeList, projectNode],
             currentProject: false,
             currentGroup: false
         };
@@ -98,11 +103,11 @@ describe( 'currentProjectOnlyReducers', () => {
         expect(actual).toEqual(expected);
     });
     test('groupStart', () => {
-        const actual = currentProjectOnlyReducers.groupStart( {
+        const actual = currentProjectOnlyReducers.groupStart({
             list: nodeList,
             currentProject: projectNode,
             node: newGroupNode
-        } );
+        });
 
         const expected = {
             list: nodeList,
@@ -113,35 +118,34 @@ describe( 'currentProjectOnlyReducers', () => {
         expect(actual).toEqual(expected);
     });
     test('default', () => {
-        const actual = currentProjectOnlyReducers._( {
+        const actual = currentProjectOnlyReducers._({
             list: nodeList,
             currentProject: projectNode,
             node: anythingElse,
-            currentGroup: false,
-
-        } );
+            currentGroup: false
+        });
 
         const expected = {
             list: nodeList,
-            currentProject: { ...projectNode, childNodes: [ anythingElse ] },
+            currentProject: { ...projectNode, childNodes: [anythingElse] },
             currentGroup: false
         };
 
         expect(actual).toEqual(expected);
     });
-} );
+});
 
-describe( 'bothReducers', () => {
+describe('bothReducers', () => {
     test('projectStart', () => {
-        const actual = bothReducers.projectStart( {
+        const actual = bothReducers.projectStart({
             list: nodeList,
             currentProject: projectNode,
             currentGroup: groupNode,
-            node: newProjectNode,
-        } );
+            node: newProjectNode
+        });
 
         const expected = {
-            list: [ ...nodeList, { ...projectNode, childNodes: [ groupNode ] } ],
+            list: [...nodeList, { ...projectNode, childNodes: [groupNode] }],
             currentProject: newProjectNode,
             currentGroup: false
         };
@@ -149,14 +153,14 @@ describe( 'bothReducers', () => {
         expect(actual).toEqual(expected);
     });
     test('projectTerminal', () => {
-        const actual = bothReducers.projectTerminal( {
+        const actual = bothReducers.projectTerminal({
             list: nodeList,
             currentProject: projectNode,
-            currentGroup: groupNode,
-        } );
+            currentGroup: groupNode
+        });
 
         const expected = {
-            list: [ ...nodeList, { ...projectNode, childNodes: [ groupNode ] } ],
+            list: [...nodeList, { ...projectNode, childNodes: [groupNode] }],
             currentProject: false,
             currentGroup: false
         };
@@ -164,80 +168,82 @@ describe( 'bothReducers', () => {
         expect(actual).toEqual(expected);
     });
     test('groupStart', () => {
-        const actual = bothReducers.groupStart( {
+        const actual = bothReducers.groupStart({
             list: nodeList,
             currentProject: projectNode,
             currentGroup: groupNode,
-            node: newGroupNode,
-        } );
+            node: newGroupNode
+        });
 
         const expected = {
             list: nodeList,
-            currentProject: { ...projectNode, childNodes: [ groupNode ] },
+            currentProject: { ...projectNode, childNodes: [groupNode] },
             currentGroup: newGroupNode
         };
 
         expect(actual).toEqual(expected);
     });
     test('groupTerminal', () => {
-        const actual = bothReducers.groupTerminal( {
+        const actual = bothReducers.groupTerminal({
             list: nodeList,
             currentProject: projectNode,
-            currentGroup: groupNode,
-        } );
+            currentGroup: groupNode
+        });
 
         const expected = {
             list: nodeList,
-            currentProject: { ...projectNode, childNodes: [ groupNode ] },
+            currentProject: { ...projectNode, childNodes: [groupNode] },
             currentGroup: false
         };
 
         expect(actual).toEqual(expected);
     });
     test('default', () => {
-        const actual = bothReducers._( {
+        const actual = bothReducers._({
             list: nodeList,
             currentProject: projectNode,
             currentGroup: groupNode,
-            node: anythingElse,
-        } );
+            node: anythingElse
+        });
 
         const expected = {
             list: nodeList,
             currentProject: projectNode,
-            currentGroup: { ...groupNode, childNodes: [ anythingElse ] }
+            currentGroup: { ...groupNode, childNodes: [anythingElse] }
         };
 
         expect(actual).toEqual(expected);
     });
-} );
+});
 
-describe( 'updateParentWithNode', () => {
-    test( 'empty', () => {
+describe('updateParentWithNode', () => {
+    test('empty', () => {
         const actual = updateParentWithNode();
 
-        const expected = { childNodes: [ undefined ] };
+        const expected = { childNodes: [undefined] };
 
         expect(actual).toEqual(expected);
-    } ),
-    test( 'new parent', () => {
-        const actual = updateParentWithNode( { id: 1 }, { id: 2 }  );
-        const expected = {
-            id: 1,
-            childNodes: [ { id: 2 } ]
-        };
-        expect(actual).toEqual(expected);
-    } ),
-    test( 'expecting parent', () => {
-        const actual = updateParentWithNode( {
+    }),
+        test('new parent', () => {
+            const actual = updateParentWithNode({ id: 1 }, { id: 2 });
+            const expected = {
                 id: 1,
-                childNodes: [ { id: 2 } ]
-            }, { id: 3 }
-        );
-        const expected = {
-            id: 1,
-            childNodes: [ { id: 2 }, { id: 3 } ]
-        };
-        expect(actual).toEqual(expected);
-    } )
-} );
+                childNodes: [{ id: 2 }]
+            };
+            expect(actual).toEqual(expected);
+        }),
+        test('expecting parent', () => {
+            const actual = updateParentWithNode(
+                {
+                    id: 1,
+                    childNodes: [{ id: 2 }]
+                },
+                { id: 3 }
+            );
+            const expected = {
+                id: 1,
+                childNodes: [{ id: 2 }, { id: 3 }]
+            };
+            expect(actual).toEqual(expected);
+        });
+});
