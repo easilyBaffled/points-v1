@@ -4,3 +4,8 @@
 li {
     list-style-type: none;
 }
+
+.custom-render ul {
+    margin-left: 0;
+    padding-left: 0;
+}

@@ -1,5 +1,3 @@
-import _ from "lodash";
-import fp from "lodash/fp";
 import match from "match-by";
 
 import {
