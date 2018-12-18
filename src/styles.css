@@ -5,6 +5,12 @@ li {
     list-style-type: none;
 }
 
+.container {
+    background: #eee;
+    border: 1px solid #ddd;
+    padding: 20px;
+}
+
 .custom-render ul {
     margin-left: 0;
     padding-left: 0;
