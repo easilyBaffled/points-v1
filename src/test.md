@@ -6,7 +6,7 @@ Notes about something or other
 
 - [ ] before all stand alone task: 1
 
-### [ ∀ ] All or Nothing Group Task: Group Reward
+### [∀] All or Nothing Group Task: Group Reward
 
 - [ ] A
 - [ ] B
