@@ -172,3 +172,93 @@ Children nodes will have a reference to their parents. This will be stored in a 
 	checked?: boolean - List task item only
 }
 ```
+
+# Task
+
+## Task Specific Rules - Prefix
+
+Tasks, or Task Sets can include rules for the task's completion. These rules are indicated by a symbol infront of the task.
+Rewards for the task may only be rewared when the rule's qualifications have been met.
+
+[ ∀ ] - All or Nothing
+This task group can only be marked complete, when all of it's subtasks have been completed
+matcher: `/^\[\s*∀\s*\]/`
+state: `{ rule: ‘all-or-nothing’ }`
+validation: is a task, has children, all children are checked
+examples:
+
+```
+		//Pass
+		### [ ∀ ] All or Nothing: 1
+			- [x] anything
+			- [x] anything: anything
+			- [x] anything: 12
+
+		# [ ∀ ] All or Nothing: 1
+			- [x] anything
+			- [x] anything: anything
+			- [x] anything: 12
+
+		//Fail
+		### [ ∀ ] All or Nothing: 1
+			- [x] anything
+			- [x] anything: anything
+			- [ ] anything: 12
+		###
+
+		### [ ∀ ] All or Nothing: 1
+			- [ ] anything
+			- [ ] anything: anything
+			- [ ] anything: 12
+		###
+
+		### [ ∀ ] All or Nothing: 1
+		###
+
+		### [ ∀ ] All or Nothing // No reward
+			- [x] anything
+		###
+
+		- [ ] [ ∀ ] - All or Nothing: 1
+```
+
+[ ∃! ] - First Success
+state: { rule: ‘first’ }
+matcher: /^\[\s*∃!\s*\]/
+validation: node => node.children.some( isChecked )
+
+[ x: number ] - Next number is 0
+state:
+{ rule: { name: ’count-down’, currentCount: x, previousNumber: null } }
+{ rule: { name: ’count-down’, currentCount: y, previousNumber: x } }
+{ rule: { name: ’count-down’, currentCount: 0, previousNumber: x } }
+
+    validation:
+    	node.rule.currentCount === 0,
+    	node.rule. previousNumber !== 0
+
+[ x: number ] y: number% - Next number is y% less than x
+state:
+{ rule: { name: ’percent-count-down’, currentCount: x, previousNumber: null } }
+{ rule: { name: ’percent-count-down’, currentCount: y, previousNumber: x } }
+{ rule: { name: ’percent-count-down’, currentCount: 0, previousNumber: x } }
+validation:
+node.rule.currentCount === 0,
+node.rule. previousNumber !== 0
+
+🕐( x: number ) - only allow x time
+
+>     Not a state based rule, must be enforced personally
+
+♺ ( x: number) - repeat x times
+state:
+{ rule: { name: ’repeat’, repetitionCount: x } }
+{ rule: { name: ’repeat’, repetitionCount: 0 } }
+validation
+repetitionCount is a valid number
+
+♺ - repeat daily
+state:
+{ rule: { name: ’repeat’, repetitionCount: symbol(‘daily’) } }
+validation:
+repetitionCount is a valid symbol
