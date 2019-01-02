@@ -1,7 +1,7 @@
 import match from "match-by";
 import _ from "lodash";
 
-import { required as R } from "../index";
+import { required as R } from "../util";
 import { applyIs } from "./identifiers";
 
 export const SITUATION_MATCHERS = {

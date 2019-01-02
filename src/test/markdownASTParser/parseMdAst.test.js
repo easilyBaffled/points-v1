@@ -1,3 +1,6 @@
+import _ from 'lodash';
+import is from '@sindresorhus/is';
+
 import {
   allFalseReducers,
   currentProjectOnlyReducers,
@@ -308,3 +311,40 @@ describe("compileNotes", () => {
     expect(actual).toMatchObject(expected);
   });
 });
+
+const standardNode = {
+  type: expect.any(String),
+  text: expect.any(String)
+};
+
+const parentNode = {
+  ...standardNode,
+  children: expect.any(Array)
+};
+
+const childNode = {
+  ...standardNode,
+  parent: expect.objectContaining( parentNode )
+};
+
+let markdownAst;
+describe( 'v2 node organization', function() {
+  beforeEach( () => {
+    const markdownString = removeTabs`
+        # Project id:1
+        
+        - [ ] task id:2
+          
+        ---
+    `;
+
+    markdownAst = compileNotes( markdownReader(markdownString).children );
+  } );
+
+  test( 'ast is an array of valid nodes', () => {
+    const actual = markdownAst[ 0 ];
+    const expected = parentNode;
+
+    expect(actual).toMatchObject( expected );
+  } )
+} );

@@ -5,6 +5,7 @@
   "keywords": [],
   "main": "src/index.js",
   "dependencies": {
+    "@sindresorhus/is": "^0.14.0",
     "lodash": "4.17.11",
     "match-by": "0.5.1",
     "react": "16.6.3",

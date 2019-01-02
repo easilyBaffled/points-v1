@@ -20,8 +20,8 @@ export const required = function ( name = 'value' ) {
 
 /**
  *
- * @param {str} str
- * @returns {str}
+ * @param {string} str
+ * @returns {string}
  */
 export const removeTabs = ( [ str ] ) =>
     str.replace( /(\t|    )/g, '' );
