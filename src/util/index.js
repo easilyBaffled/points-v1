@@ -25,3 +25,23 @@ export const required = function ( name = 'value' ) {
  */
 export const removeTabs = ( [ str ] ) =>
     str.replace( /(\t|    )/g, '' );
+
+export const flattenObjectBy = ( object, propName ) => {
+    var levels = [];
+    var stack = [obj];
+
+    while (stack.length) {
+        var target = stack.pop();
+
+        levels.push(target);
+
+        for (var key in target) {
+            var val = target[key];
+            if (R.type(val) == 'Object') {
+                stack.push(val);
+            }
+        }
+    }
+
+    return levels;
+};

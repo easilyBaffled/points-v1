@@ -1,6 +1,3 @@
-import _ from 'lodash';
-import is from '@sindresorhus/is';
-
 import {
   allFalseReducers,
   currentProjectOnlyReducers,
@@ -11,6 +8,8 @@ import { compileNotes } from "../../markdownASTParser/parseMdAst";
 
 import markdownReader from "../../markdownReader";
 import { removeTabs } from "../../util";
+
+import { flattenByProp, findById } from '../testUtils';
 
 test("Project with Groups", () => {
   const markdownString = removeTabs`
@@ -322,29 +321,107 @@ const parentNode = {
   children: expect.any(Array)
 };
 
+const projectNode = {
+    ...parentNode,
+    depth: 1
+};
+
+const groupNode = {
+    ...parentNode,
+    depth: 3
+};
+
 const childNode = {
   ...standardNode,
   parent: expect.objectContaining( parentNode )
 };
 
+const taskNode = {
+    ...standardNode,
+    completed: expect.any(Boolean),
+    rule: expect.any(String)
+};
+
 let markdownAst;
+let flattenedNodes;
 describe( 'v2 node organization', function() {
-  beforeEach( () => {
-    const markdownString = removeTabs`
-        # Project id:1
-        
-        - [ ] task id:2
-          
-        ---
-    `;
+    beforeEach( () => {
+        const markdownString = removeTabs`
+            # Project id:1
+                        
+            - [ ] task id:2
+              
+            ### Group id:3
+                - [ ] task id:4
+            ###
+            
+            Stand alone Text: 5  
+            ---
+        `;
 
-    markdownAst = compileNotes( markdownReader(markdownString).children );
-  } );
+        markdownAst = compileNotes( markdownReader(markdownString).children );
+        flattenedNodes = flattenByProp( markdownAst, 'children' )
+    } );
 
-  test( 'ast is an array of valid nodes', () => {
-    const actual = markdownAst[ 0 ];
-    const expected = parentNode;
+    describe( 'Parent Node', () => {
+      test('Project Start', () => {
+          const actual = findById( flattenedNodes, '1' );
+          const expected = projectNode;
 
-    expect(actual).toMatchObject( expected );
-  } )
+          expect(actual).toMatchObject( expected );
+      });
+
+      test('Group Start', () => {
+          const actual = findById( flattenedNodes, '3' );
+          const expected = groupNode;
+
+          expect(actual).toMatchObject( expected );
+      });
+    } );
+
+    describe('Child Node', () => {
+        test( 'Stand Alone Child', () => {
+            const actual = findById( flattenedNodes, '2' );
+            const expected = childNode;
+
+            expect(actual).toMatchObject( expected );
+        } );
+
+        test( 'Group as Child of Project', () => {
+            const actual = findById( flattenedNodes, '3' );
+            const expected = childNode;
+
+            expect(actual).toMatchObject( expected );
+        } );
+
+        test( 'Child of Group', () => {
+            const actual = findById( flattenedNodes, '4' );
+            const expected = childNode;
+
+            expect(actual).toMatchObject( expected );
+        } );
+    } );
+
+    test('Text Node', () => {
+        const actual = findById( flattenedNodes, '5' );
+        const expected = standardNode;
+
+        expect(actual).toMatchObject( expected );
+    } );
+
+    describe( 'Task', () => {
+        test( 'Project Task', () => {
+            const actual = findById( flattenedNodes, '1' );
+            const expected = taskNode;
+
+            expect(actual).toMatchObject( expected );
+        } );
+
+        test( 'Checkbox Task', () => {
+            const actual = findById( flattenedNodes, '4' );
+            const expected = taskNode;
+
+            expect(actual).toMatchObject( expected );
+        } )
+    } )
 } );
