@@ -1,5 +1,5 @@
 // Featured
-const extractLineNumber = stack => /:(\d+)/.exec(stack.split("\n")[2])[0];
+const extractLineNumber = stack => /([^\/]+):/.exec(stack.split("\n")[2])[1];
 
 export const logIdent = (v, opt = { label: "", lineNumber: false }) => {
   const label =
@@ -16,5 +16,4 @@ export const logIdent = (v, opt = { label: "", lineNumber: false }) => {
   return v;
 };
 
-export default logIdent;
 export const polyfill = () => (console.ident = logIdent);

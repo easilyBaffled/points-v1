@@ -2,7 +2,6 @@ import React from 'react';
 import match from 'match-by';
 import _ from 'lodash';
 
-const hasChildNodes = node => !_.isEmpty(node.childNodes);
 const hasChildren = node => !_.isEmpty(node.children);
 
 const ProjectHeader = ({ children: node }) => (
@@ -24,7 +23,7 @@ const Task = ({ checked, children }) => (
         <Text>{children}</Text>
     </li>
 );
-const Text = ({ children: node }) => gatherChildren(node);
+const Text = ({ children: node }) => typeof node === 'string' ? node : node.text;
 
 const identifiers = {
     projectStart: { type: 'heading', depth: 1 }, // node.children[0].value
@@ -43,13 +42,6 @@ const identifiersTestExpression = node =>
         {}
     );
 
-const gatherChildren = node =>
-    node.value
-        ? node.value
-        : hasChildren(node)
-        ? _.map(node.children, gatherChildren).join(' ')
-        : '';
-
 const matchToComponent = node =>
     match(
         {
@@ -57,25 +49,21 @@ const matchToComponent = node =>
             groupStart: () => <GroupHeader>{node}</GroupHeader>,
             taskList: () => (
                 <ul>
-                    {node.children.map(child =>
-                        child.children.length === 1 ? (
-                            <Task checked={child.checked}>{child}</Task>
-                        ) : (
+                    {node.children.map( ( child, i )  =>
                             [
-                                <Task checked={child.checked}>
-                                    {child.children[0]}
+                                <Task key={'task'+i} checked={child.checked}>
+                                    {child.text}
                                 </Task>,
-                                <ChildNodes>
-                                    {child.children[1].children.map(
+                                <ChildNodes key={'sub-task'+ i} >
+                                    {child.children && child.children.map(
                                         subChild => (
                                             <Task checked={subChild.checked}>
-                                                {subChild}
+                                                {subChild.text}
                                             </Task>
                                         )
                                     )}
                                 </ChildNodes>
                             ]
-                        )
                     )}
                 </ul>
             ),
@@ -84,20 +72,18 @@ const matchToComponent = node =>
                     <Text>{node}</Text>
                 </p>
             ),
-            _: () => <div>WIP: {JSON.stringify(node)}</div>
+            _: () => null //<div>WIP: {JSON.stringify(node)}</div>
         },
         identifiersTestExpression(node)
     );
 
 const mdReducer = nodeList => {
-    // console.log(nodeList);
-    return nodeList.reduce((acc, node) => {
-        //console.log(node.type, node);
+    return nodeList.reduce((acc, node, i) => {
         return [
             ...acc,
             matchToComponent(node),
-            ...(hasChildNodes(node)
-                ? [<ChildNodes>{mdReducer(node.childNodes)}</ChildNodes>]
+            ...(hasChildren(node)
+                ? [<ChildNodes key={i}>{mdReducer(node.children)}</ChildNodes>]
                 : [])
         ];
     }, []);

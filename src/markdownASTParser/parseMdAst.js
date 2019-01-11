@@ -8,6 +8,7 @@ import {
     preparedMatchers
 } from './parsingSituationReducers';
 import { objToBitKey } from '../util';
+import _ from 'lodash';
 
 /**
  * @typedef AstNode
@@ -67,8 +68,39 @@ export const compileNotes = nodeList => {
         { list: [], currentProject: false, currentGroup: false }
     );
     // Pull in final currentProject, currentGroup
-    // that may have been left without an explicet terminal
+    // that may have been left without an explicit terminal
     const bitKey = objToBitKey(status);
     const finalResolution = bitKeyCleanUpMatcher(bitKey);
-    return finalResolution({ list, ...status });
+    const finalRes = finalResolution({ list, ...status }); // TODO: looking at this I can't tell if finalResolution results in an array
+    return cleanNodes( console.ident( Array.isArray( finalRes ) ? finalRes : finalRes.list ) );
 };
+
+const hasChildren = node => !_.isEmpty(node.children);
+
+const getNodeText = node =>
+    node.value
+        ? node.value
+        : hasChildren(node)
+        ? _.map(node.children.filter( n => n.type !== 'list' ), getNodeText).join(' ')
+        : '';
+
+const addParent = (node, parent) => Object.defineProperty( node, 'parent', {
+    value: parent,
+    enumerable: process.env.NODE_ENV === 'test',
+    writable: false,
+    configurable: false
+} );
+
+const cleanNode = ( { position, value, children, childNodes = [], type, ...node } ) => {
+    const formattedNode = {
+        type,
+        text: type !== 'list' ? getNodeText( { value, children } ) : null,
+        children: ( type !== 'list' ? childNodes : children ).map( n => cleanNode( n ) ),
+        ...node
+    };
+    formattedNode.children.map( c => addParent( c, formattedNode ) );
+
+    return formattedNode;
+}
+
+const cleanNodes = nodes => nodes.map( cleanNode );

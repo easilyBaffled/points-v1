@@ -26,13 +26,6 @@ const objHasAll = (matching, obj) => _.matches(matching)(obj);
  */
 const toArray = v => [].concat(v);
 
-/**
- *
- * @param {AstNode} node
- * @returns {number[]}
- */
-const getIndentation = node => node.position.indent;
-
 /********************
  *  external utils  *
  ********************/

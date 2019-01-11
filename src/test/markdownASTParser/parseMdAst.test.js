@@ -345,22 +345,22 @@ const taskNode = {
 let markdownAst;
 let flattenedNodes;
 describe( 'v2 node organization', function() {
-    beforeEach( () => {
+    beforeAll( () => {
         const markdownString = removeTabs`
-            # Project id:1
+            # Project #1
                         
-            - [ ] task id:2
+            - [ ] task #2
               
-            ### Group id:3
-                - [ ] task id:4
+            ### Group #3
+                - [ ] task #4
             ###
             
-            Stand alone Text: 5  
+            Stand alone Text #5  
             ---
         `;
 
-        markdownAst = compileNotes( markdownReader(markdownString).children );
-        flattenedNodes = flattenByProp( markdownAst, 'children' )
+        markdownAst = compileNotes( markdownReader(markdownString).children )[ 0 ];
+        flattenedNodes = flattenByProp( markdownAst, 'children' );
     } );
 
     describe( 'Parent Node', () => {
@@ -383,7 +383,8 @@ describe( 'v2 node organization', function() {
         test( 'Stand Alone Child', () => {
             const actual = findById( flattenedNodes, '2' );
             const expected = childNode;
-
+            console.log(findById( flattenedNodes, '1' ))
+            console.log(actual)
             expect(actual).toMatchObject( expected );
         } );
 

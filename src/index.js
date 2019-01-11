@@ -10,17 +10,14 @@ import { compileNotes } from "./markdownASTParser/parseMdAst";
 import test from "./test.md";
 
 polyfill();
+console.log(test)
 
-const mdAst = markdownReader(test);
-const notesObject = compileNotes(mdAst.children);
-console.log({ mdAst, notesObject });
-console.log(lint(test));
-function App() {
+function App( { markdownString, mdAst, notesObject } ) {
   return (
     <div className="App">
       {null && (
         <pre>
-          <code>{test}</code>
+          <code>{markdownString}</code>
         </pre>
       )}
       {null && (
@@ -30,7 +27,7 @@ function App() {
       )}
       <h1> Points Markdown ported directly to html </h1>
       <div className="container">
-        <ReactMarkdown source={tabsToSpaces(test)} />
+        <ReactMarkdown source={tabsToSpaces(markdownString)} />
       </div>
       <h1>
         Points Markdown parsed, organized ( parent-child ) and rendered with
@@ -45,5 +42,19 @@ function App() {
   );
 }
 
-const rootElement = document.getElementById("root");
-ReactDOM.render(<App />, rootElement);
+async function run ()
+{
+    const markdown = await ( test.endsWith('.md')
+        ? fetch( test ).then(r => r.text() ).then(console.ident)
+        : test );
+
+    const mdAst = markdownReader(markdown);
+    const notesObject = compileNotes(mdAst.children);
+    console.log({ mdAst, notesObject });
+    console.log(lint(markdown));
+
+    const rootElement = document.getElementById("root");
+    ReactDOM.render(<App markdownString={markdown} mdAst={mdAst} notesObject={notesObject}/>, rootElement);
+}
+
+run()

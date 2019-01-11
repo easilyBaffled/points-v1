@@ -227,8 +227,6 @@ export const updateParentWithNode = (
   childNodes: [...(parent.childNodes || []), childNode]
 });
 
-console.ident = (v, l) => (console.log(l, v), v);
-
 const constructMatcher = reducers => node =>
   match(
     _.reduce(
