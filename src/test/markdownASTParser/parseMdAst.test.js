@@ -54,17 +54,17 @@ test("Project with Groups", () => {
       {
         type: "heading",
         depth: 1,
-        childNodes: [
+        children: [
           { type: "list" },
           {
             type: "heading",
             depth: 3,
-            childNodes: [{ type: "list" }]
+            children: [{ type: "list" }]
           },
           {
             type: "heading",
             depth: 3,
-            childNodes: [{ type: "paragraph" }]
+            children: [{ type: "paragraph" }]
           }
         ]
       }
@@ -109,13 +109,13 @@ test("Just Groups", () => {
       {
         type: "heading",
         depth: 3,
-        childNodes: [{ type: "list" }]
+        children: [{ type: "list" }]
       }
     ],
     currentGroup: {
       type: "heading",
       depth: 3,
-      childNodes: [{ type: "list" }]
+      children: [{ type: "list" }]
     }
   };
 
@@ -172,13 +172,13 @@ test("Lists and Groups and lists", () => {
       {
         type: "heading",
         depth: 3,
-        childNodes: [{ type: "list" }]
+        children: [{ type: "list" }]
       },
       { type: "list" },
       {
         type: "heading",
         depth: 3,
-        childNodes: [{ type: "list" }]
+        children: [{ type: "list" }]
       },
       { type: "list" }
     ]
@@ -213,17 +213,17 @@ describe("compileNotes", () => {
       {
         type: "heading",
         depth: 1,
-        childNodes: [
+        children: [
           { type: "list" },
           {
             type: "heading",
             depth: 3,
-            childNodes: [{ type: "list" }]
+            children: [{ type: "list" }]
           },
           {
             type: "heading",
             depth: 3,
-            childNodes: [{ type: "paragraph" }]
+            children: [{ type: "paragraph" }]
           }
         ]
       }
@@ -253,12 +253,12 @@ describe("compileNotes", () => {
         {
           type: "heading",
           depth: 3,
-          childNodes: [{ type: "list" }]
+          children: [{ type: "list" }]
         },
         {
           type: "heading",
           depth: 3,
-          childNodes: [{ type: "list" }]
+          children: [{ type: "list" }]
         }
       ]
     };
@@ -296,13 +296,13 @@ describe("compileNotes", () => {
       {
         type: "heading",
         depth: 3,
-        childNodes: [{ type: "list" }]
+        children: [{ type: "list" }]
       },
       { type: "list" },
       {
         type: "heading",
         depth: 3,
-        childNodes: [{ type: "list" }]
+        children: [{ type: "list" }]
       },
       { type: "list" }
     ];
@@ -338,28 +338,29 @@ const childNode = {
 
 const taskNode = {
     ...standardNode,
-    completed: expect.any(Boolean),
-    rule: expect.any(String)
+    // completed: expect.any(Boolean),
+    // rule: expect.any(String)
 };
 
 let markdownAst;
 let flattenedNodes;
 describe( 'v2 node organization', function() {
-    beforeAll( () => {
+    beforeAll( () => {      // removeTabs isn't working
         const markdownString = removeTabs`
-            # Project #1
-                        
-            - [ ] task #2
-              
-            ### Group #3
-                - [ ] task #4
-            ###
-            
-            Stand alone Text #5  
-            ---
+# Project #1
+
+  - [ ] task #2
+
+### Group #3
+  - [ ] task #4
+###
+
+Stand alone Text #5  
+---
         `;
 
         markdownAst = compileNotes( markdownReader(markdownString).children )[ 0 ];
+        console.log(markdownAst)
         flattenedNodes = flattenByProp( markdownAst, 'children' );
     } );
 
@@ -383,8 +384,7 @@ describe( 'v2 node organization', function() {
         test( 'Stand Alone Child', () => {
             const actual = findById( flattenedNodes, '2' );
             const expected = childNode;
-            console.log(findById( flattenedNodes, '1' ))
-            console.log(actual)
+
             expect(actual).toMatchObject( expected );
         } );
 
@@ -396,6 +396,7 @@ describe( 'v2 node organization', function() {
         } );
 
         test( 'Child of Group', () => {
+            console.log(flattenedNodes)
             const actual = findById( flattenedNodes, '4' );
             const expected = childNode;
 

@@ -8,4 +8,4 @@ export function flattenByProp(obj, prop) {
 
 
 export const findById  = ( nodeList, id ) =>
-    _.find( nodeList, n => n.text.endsWith(`#${id}`) );
+    _.find( nodeList, n => n.text && n.text.includes(`#${id}`) );
