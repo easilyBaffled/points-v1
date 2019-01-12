@@ -54,18 +54,18 @@ test("Project with Groups", () => {
       {
         type: "heading",
         depth: 1,
-        children: [
-          { type: "list" },
-          {
-            type: "heading",
-            depth: 3,
-            children: [{ type: "list" }]
-          },
-          {
-            type: "heading",
-            depth: 3,
-            children: [{ type: "paragraph" }]
-          }
+          childNodes: [
+              { type: "list" },
+              {
+                type: "heading",
+                depth: 3,
+                childNodes: [{ type: "list" }]
+              },
+              {
+                type: "heading",
+                depth: 3,
+                childNodes: [{ type: "paragraph" }]
+              }
         ]
       }
     ]
@@ -76,13 +76,11 @@ test("Project with Groups", () => {
 
 test("Just Groups", () => {
   const markdownString = removeTabs`       
-        ### Group id:3
-        
+        ### Group id:6        
           - [ ] task id:4
           - [ ] task id:5
           
-        ### Group id:6
-        
+        ### Group id:6       
           - [ ] task id:4
           - [ ] task id:5
     `;
@@ -98,6 +96,7 @@ test("Just Groups", () => {
 
   const actual = markdownAst.reduce(
     (parsed, node, i) => {
+        console.log(node)
       const currentFunction = parsingFunctions[i];
       return currentFunction({ ...parsed, node });
     },
@@ -109,13 +108,13 @@ test("Just Groups", () => {
       {
         type: "heading",
         depth: 3,
-        children: [{ type: "list" }]
+        childNodes: [{ type: "list" }]
       }
     ],
     currentGroup: {
       type: "heading",
       depth: 3,
-      children: [{ type: "list" }]
+        childNodes: [{ type: "list" }]
     }
   };
 
@@ -129,9 +128,9 @@ test("Lists and Groups and lists", () => {
         
         ### Group id:3       
           - [ ] task id:4
-          - [ ] task id:5
-          
+          - [ ] task id:5  
         ###
+        
         - [ ] task id:4
         - [ ] task id:5
         
@@ -172,13 +171,13 @@ test("Lists and Groups and lists", () => {
       {
         type: "heading",
         depth: 3,
-        children: [{ type: "list" }]
+        childNodes: [{ type: "list" }]
       },
       { type: "list" },
       {
         type: "heading",
         depth: 3,
-        children: [{ type: "list" }]
+        childNodes: [{ type: "list" }]
       },
       { type: "list" }
     ]
@@ -248,8 +247,7 @@ describe("compileNotes", () => {
     const markdownAst = markdownReader(markdownString).children;
     const actual = compileNotes(markdownAst);
 
-    const expected = {
-      list: [
+    const expected = [
         {
           type: "heading",
           depth: 3,
@@ -260,8 +258,7 @@ describe("compileNotes", () => {
           depth: 3,
           children: [{ type: "list" }]
         }
-      ]
-    };
+      ];
 
     expect(actual).toMatchObject(expected);
   });
@@ -280,7 +277,7 @@ describe("compileNotes", () => {
         - [ ] task id:5
         
         ### Group id:6
-
+        
           - [ ] task id:4
           - [ ] task id:5
                     
@@ -311,7 +308,7 @@ describe("compileNotes", () => {
   });
 });
 
-const standardNode = {
+const standardNode = { //  Does not account for lists which have null for text
   type: expect.any(String),
   text: expect.any(String)
 };
@@ -338,8 +335,8 @@ const childNode = {
 
 const taskNode = {
     ...standardNode,
-    // completed: expect.any(Boolean),
-    // rule: expect.any(String)
+    completed: expect.any(Boolean),
+    rule: expect.any(String)
 };
 
 let markdownAst;
@@ -347,20 +344,20 @@ let flattenedNodes;
 describe( 'v2 node organization', function() {
     beforeAll( () => {      // removeTabs isn't working
         const markdownString = removeTabs`
-# Project #1
-
-  - [ ] task #2
-
-### Group #3
-  - [ ] task #4
-###
-
-Stand alone Text #5  
----
+            # Project #1
+            
+                - [ ] task #2
+            
+                ### Group #3
+                  - [ ] task #4
+                ###
+                
+                Stand alone Text #5  
+            ---
         `;
 
         markdownAst = compileNotes( markdownReader(markdownString).children )[ 0 ];
-        console.log(markdownAst)
+
         flattenedNodes = flattenByProp( markdownAst, 'children' );
     } );
 
@@ -396,7 +393,6 @@ Stand alone Text #5
         } );
 
         test( 'Child of Group', () => {
-            console.log(flattenedNodes)
             const actual = findById( flattenedNodes, '4' );
             const expected = childNode;
 

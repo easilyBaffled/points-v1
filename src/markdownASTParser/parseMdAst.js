@@ -72,7 +72,7 @@ export const compileNotes = nodeList => {
     const bitKey = objToBitKey(status);
     const finalResolution = bitKeyCleanUpMatcher(bitKey);
     const finalRes = finalResolution({ list, ...status }); // TODO: looking at this I can't tell if finalResolution results in an array
-    return cleanNodes( console.ident( Array.isArray( finalRes ) ? finalRes : finalRes.list ) );
+    return cleanNodes( Array.isArray( finalRes ) ? finalRes : finalRes.list );
 };
 
 const hasChildren = node => !_.isEmpty(node.children);
@@ -94,7 +94,7 @@ const addParent = (node, parent) => Object.defineProperty( node, 'parent', {
 const cleanNode = ( { position, value, children, childNodes = [], type, ...node } ) => {
     const formattedNode = {
         type,
-        text: type !== 'list' ? getNodeText( { value, children } ) : null,
+        text: type !== 'list' ? getNodeText( { value, children } ) : '',
         children: ( type !== 'list' ? childNodes : children ).map( n => cleanNode( n ) ),
         ...node
     };

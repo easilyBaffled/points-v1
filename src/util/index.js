@@ -24,4 +24,4 @@ export const required = function ( name = 'value' ) {
  * @returns {string}
  */
 export const removeTabs = ( [ str ] ) =>
-    str.replace( /(\t|    })/g, '' );
+    str.replace( /(\t| {4})/g, '' );

@@ -45,7 +45,7 @@ function App( { markdownString, mdAst, notesObject } ) {
 async function run ()
 {
     const markdown = await ( test.endsWith('.md')
-        ? fetch( test ).then(r => r.text() ).then(console.ident)
+        ? fetch( test ).then(r => r.text() )
         : test );
 
     const mdAst = markdownReader(markdown);
