@@ -12,10 +12,10 @@ export const objToBitKey = o =>
  * @param {number} n
  * @returns {string}
  */
-export const bitView = n => n.toString( 2 );
+export const bitView = n => n.toString(2);
 
-export const required = function ( name = 'value' ) {
-    throw Error( `${name} is required for this function` );
+export const required = function(name = 'value') {
+    throw Error(`${name} is required for this function`);
 };
 
 /**
@@ -23,5 +23,4 @@ export const required = function ( name = 'value' ) {
  * @param {string} str
  * @returns {string}
  */
-export const removeTabs = ( [ str ] ) =>
-    str.replace( /(\t| {4})/g, '' );
+export const removeTabs = ([str]) => str.replace(/(\t| {4})/g, '');

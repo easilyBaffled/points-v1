@@ -1,9 +1,8 @@
-import { polyfill } from "./util/console.ident";
+import { polyfill } from './util/console.ident';
 import _ from 'lodash';
 import is from '@sindresorhus/is';
 
 polyfill();
-
 
 // const prependIsA = newStr => 'isA' + _.capitalize(newStr);
 

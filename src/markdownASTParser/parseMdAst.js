@@ -72,7 +72,7 @@ export const compileNotes = nodeList => {
     const bitKey = objToBitKey(status);
     const finalResolution = bitKeyCleanUpMatcher(bitKey);
     const finalRes = finalResolution({ list, ...status }); // TODO: looking at this I can't tell if finalResolution results in an array
-    return cleanNodes( Array.isArray( finalRes ) ? finalRes : finalRes.list );
+    return cleanNodes(Array.isArray(finalRes) ? finalRes : finalRes.list);
 };
 
 const hasChildren = node => !_.isEmpty(node.children);
@@ -81,26 +81,38 @@ const getNodeText = node =>
     node.value
         ? node.value
         : hasChildren(node)
-        ? _.map(node.children.filter( n => n.type !== 'list' ), getNodeText).join(' ')
+        ? _.map(node.children.filter(n => n.type !== 'list'), getNodeText).join(
+              ' '
+          )
         : '';
 
-const addParent = (node, parent) => Object.defineProperty( node, 'parent', {
-    value: parent,
-    enumerable: process.env.NODE_ENV === 'test',
-    writable: false,
-    configurable: false
-} );
+const addParent = (node, parent) =>
+    Object.defineProperty(node, 'parent', {
+        value: parent,
+        enumerable: process.env.NODE_ENV === 'test',
+        writable: false,
+        configurable: false
+    });
 
-const cleanNode = ( { position, value, children, childNodes = [], type, ...node } ) => {
+const cleanNode = ({
+    position,
+    value,
+    children,
+    childNodes = [],
+    type,
+    ...node
+}) => {
     const formattedNode = {
         type,
-        text: type !== 'list' ? getNodeText( { value, children } ) : '',
-        children: ( type !== 'list' ? childNodes : children ).map( n => cleanNode( n ) ),
+        text: type !== 'list' ? getNodeText({ value, children }) : '',
+        children: (type !== 'list' ? childNodes : children).map(n =>
+            cleanNode(n)
+        ),
         ...node
     };
-    formattedNode.children.map( c => addParent( c, formattedNode ) );
+    formattedNode.children.map(c => addParent(c, formattedNode));
 
     return formattedNode;
-}
+};
 
-const cleanNodes = nodes => nodes.map( cleanNode );
+const cleanNodes = nodes => nodes.map(cleanNode);

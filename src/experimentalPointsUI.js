@@ -23,7 +23,8 @@ const Task = ({ checked, children }) => (
         <Text>{children}</Text>
     </li>
 );
-const Text = ({ children: node }) => typeof node === 'string' ? node : node.text;
+const Text = ({ children: node }) =>
+    typeof node === 'string' ? node : node.text;
 
 const identifiers = {
     projectStart: { type: 'heading', depth: 1 }, // node.children[0].value
@@ -49,22 +50,19 @@ const matchToComponent = node =>
             groupStart: () => <GroupHeader>{node}</GroupHeader>,
             taskList: () => (
                 <ul>
-                    {node.children.map( ( child, i )  =>
-                            [
-                                <Task key={'task'+i} checked={child.checked}>
-                                    {child.text}
-                                </Task>,
-                                <ChildNodes key={'sub-task'+ i} >
-                                    {child.children && child.children.map(
-                                        subChild => (
-                                            <Task checked={subChild.checked}>
-                                                {subChild.text}
-                                            </Task>
-                                        )
-                                    )}
-                                </ChildNodes>
-                            ]
-                    )}
+                    {node.children.map((child, i) => [
+                        <Task key={'task' + i} checked={child.checked}>
+                            {child.text}
+                        </Task>,
+                        <ChildNodes key={'sub-task' + i}>
+                            {child.children &&
+                                child.children.map(subChild => (
+                                    <Task checked={subChild.checked}>
+                                        {subChild.text}
+                                    </Task>
+                                ))}
+                        </ChildNodes>
+                    ])}
                 </ul>
             ),
             paragraph: () => (
