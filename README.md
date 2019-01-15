@@ -1,11 +1,22 @@
 # Points
 
-The purpose of this project is to be the first step towards making a new “Points” todo list app that uses a design to give tasks weights, rather than being just a checklist.
+The purpose of this project (not just v1) is to be the first step towards making a new “Points” todo list app that uses a design to give tasks weights, rather than being just a checklist.
 
-This part will take in a markdown file representing a “Points” todo list and convert it to an AST that follows the organizing principles of my design.
+The version 0 of Points is a markdown file and a set of rules that I have kept in my head. The rules are tied to the markdown format. “#”, “###”, and “——“designate groupings, `[^:]:\w+$` indicates a task. 
+The purpose of points-v1 is to create a formalized structure that emulates the rules I have created and the structure of the markdown formatting. 
 
-The project uses `unified`’s `remark-parse` to parse the markdown string into the initial Markdown AST.
-This initial AST is a flat structure so parse through it and apply my rules to create a parent-child relationship and other organizing principles.
+This part will take in a Points-v0 markdown file representing a “Points” todo list and convert it to an AST that follows the organizing principles of my design. This includes grouping tasks and extracting points and evaluation rules from the strings. 
+That AST will be used as the basis for the rest of the app going forward. The full app will have a way to add and update tasks along with a proper UI to display them.
+
+The project uses `unified`’s `remark-parse` to parse the markdown string into the initial Markdown AST. This initial AST is a flat structure in that there sense of grouping. For example:
+```
+# Header
+## Subheader
+  - l1
+  - l2
+```
+Header has no indication that Subheader and the list might be associated with it. Instead the parsed Header has a `children` property that holds its text.
+Points-v1 will parse through the initial Markdown AST and apply my rules to create a parent-child relationship and other organizing principles.
 
 # The Rules
 
