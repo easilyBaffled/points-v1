@@ -1,0 +1,37 @@
+[
+  {
+    "type": "paragraph",
+    "text": "@4.1 Some Text before the group ",
+    "children": []
+  },
+  {
+    "type": "heading",
+    "text": "@4.2 A stand alone group",
+    "children": [
+      {
+        "type": "list",
+        "text": "",
+        "children": [
+          {
+            "type": "listItem",
+            "text": "@4.3 Some task with a reward: 1 ",
+            "children": [],
+            "spread": false,
+            "checked": false
+          },
+          {
+            "type": "listItem",
+            "text": "@4.4 Some task with a reward: 1 ",
+            "children": [],
+            "spread": false,
+            "checked": false
+          }
+        ],
+        "ordered": false,
+        "start": null,
+        "spread": false
+      }
+    ],
+    "depth": 3
+  }
+]

@@ -1,0 +1,162 @@
+[
+  {
+    "type": "heading",
+    "text": "Example Project: Project Reward",
+    "children": [
+      {
+        "type": "paragraph",
+        "text": "Some Descriptive Text about the nature of the project.  Notes about something or other  This Project",
+        "children": []
+      },
+      {
+        "type": "list",
+        "text": "",
+        "children": [
+          {
+            "type": "listItem",
+            "text": "before all stand alone task: 1",
+            "children": [],
+            "spread": false,
+            "checked": false
+          }
+        ],
+        "ordered": false,
+        "start": null,
+        "spread": false
+      },
+      {
+        "type": "heading",
+        "text": " ∀   All or Nothing Group Task: Group Reward",
+        "children": [
+          {
+            "type": "list",
+            "text": "",
+            "children": [
+              {
+                "type": "listItem",
+                "text": "A",
+                "children": [],
+                "spread": false,
+                "checked": false
+              },
+              {
+                "type": "listItem",
+                "text": "B",
+                "children": [],
+                "spread": false,
+                "checked": false
+              },
+              {
+                "type": "listItem",
+                "text": "C  ",
+                "children": [],
+                "spread": false,
+                "checked": false
+              }
+            ],
+            "ordered": false,
+            "start": null,
+            "spread": false
+          },
+          {
+            "type": "list",
+            "text": "",
+            "children": [
+              {
+                "type": "listItem",
+                "text": "midpoint stand alone task: 1",
+                "children": [],
+                "spread": false,
+                "checked": false
+              }
+            ],
+            "ordered": false,
+            "start": null,
+            "spread": false
+          }
+        ],
+        "depth": 3
+      },
+      {
+        "type": "heading",
+        "text": " ∃!   First One Group Task: Group Reward",
+        "children": [
+          {
+            "type": "paragraph",
+            "text": "Task Note, I’m not including -> resulting-in/branching tasks here  as that will be a mission unto itself to define",
+            "children": []
+          },
+          {
+            "type": "list",
+            "text": "",
+            "children": [
+              {
+                "type": "listItem",
+                "text": "Move write up to file ",
+                "children": [],
+                "spread": false,
+                "checked": true
+              },
+              {
+                "type": "listItem",
+                "text": "B",
+                "children": [],
+                "spread": false,
+                "checked": false
+              },
+              {
+                "type": "listItem",
+                "text": "C",
+                "children": [],
+                "spread": false,
+                "checked": false
+              }
+            ],
+            "ordered": false,
+            "start": null,
+            "spread": false
+          }
+        ],
+        "depth": 3
+      },
+      {
+        "type": "heading",
+        "text": "Regular Group Task: Group Reward",
+        "children": [
+          {
+            "type": "list",
+            "text": "",
+            "children": [
+              {
+                "type": "listItem",
+                "text": "🕐 15",
+                "children": [],
+                "spread": false,
+                "checked": false
+              },
+              {
+                "type": "listItem",
+                "text": "👉",
+                "children": [],
+                "spread": false,
+                "checked": false
+              },
+              {
+                "type": "listItem",
+                "text": "Unit tests",
+                "children": [],
+                "spread": false,
+                "checked": false
+              }
+            ],
+            "ordered": false,
+            "start": null,
+            "spread": false
+          }
+        ],
+        "depth": 3
+      }
+    ],
+    "depth": 1
+  }
+]

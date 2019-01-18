@@ -1,0 +1,18 @@
+[
+  {
+    "type": "list",
+    "text": "",
+    "children": [
+      {
+        "type": "listItem",
+        "text": "@2.1 Some task with a reward: 1 ",
+        "children": [],
+        "spread": false,
+        "checked": false
+      }
+    ],
+    "ordered": false,
+    "start": null,
+    "spread": false
+  }
+]

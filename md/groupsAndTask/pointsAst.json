@@ -1,0 +1,78 @@
+[
+  {
+    "type": "heading",
+    "text": "@5.1 A stand alone group",
+    "children": [
+      {
+        "type": "list",
+        "text": "",
+        "children": [
+          {
+            "type": "listItem",
+            "text": "@5.2 Some task with a reward: 1 ",
+            "children": [],
+            "spread": false,
+            "checked": false
+          },
+          {
+            "type": "listItem",
+            "text": "@5.3 Some task with a reward: 1 ",
+            "children": [],
+            "spread": false,
+            "checked": false
+          }
+        ],
+        "ordered": false,
+        "start": null,
+        "spread": false
+      }
+    ],
+    "depth": 3
+  },
+  {
+    "type": "heading",
+    "text": "@5.4 A stand alone group",
+    "children": [
+      {
+        "type": "list",
+        "text": "",
+        "children": [
+          {
+            "type": "listItem",
+            "text": "@5.5 Some task with a reward: 1 ",
+            "children": [],
+            "spread": false,
+            "checked": false
+          },
+          {
+            "type": "listItem",
+            "text": "@5.6 Some task with a reward: 1 ",
+            "children": [],
+            "spread": false,
+            "checked": false
+          }
+        ],
+        "ordered": false,
+        "start": null,
+        "spread": false
+      }
+    ],
+    "depth": 3
+  },
+  {
+    "type": "list",
+    "text": "",
+    "children": [
+      {
+        "type": "listItem",
+        "text": "@5.7 Some task with a reward: 1 ",
+        "children": [],
+        "spread": false,
+        "checked": false
+      }
+    ],
+    "ordered": false,
+    "start": null,
+    "spread": false
+  }
+]
