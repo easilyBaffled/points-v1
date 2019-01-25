@@ -9,7 +9,15 @@ import { compileNotes } from '../../markdownASTParser/parseMdAst';
 import markdownReader from '../../markdownReader';
 import { removeTabs } from '../../util';
 
-import { flattenByProp, findById } from '../testUtils';
+import {
+    flattenByProp,
+    findById,
+    standardNode,
+    projectNode,
+    groupNode,
+    childNode,
+    taskNode
+} from '../testUtils';
 
 test('Project with Groups', () => {
     const markdownString = removeTabs`
@@ -307,38 +315,6 @@ describe('compileNotes', () => {
         expect(actual).toMatchObject(expected);
     });
 });
-
-const standardNode = {
-    //  Does not account for lists which have null for text
-    type: expect.any(String),
-    text: expect.any(String)
-};
-
-const parentNode = {
-    ...standardNode,
-    children: expect.any(Array)
-};
-
-const projectNode = {
-    ...parentNode,
-    depth: 1
-};
-
-const groupNode = {
-    ...parentNode,
-    depth: 3
-};
-
-const childNode = {
-    ...standardNode,
-    parent: expect.objectContaining(parentNode)
-};
-
-const taskNode = {
-    ...standardNode,
-    completed: expect.any(Boolean),
-    rule: expect.any(String)
-};
 
 let markdownAst;
 let flattenedNodes;
