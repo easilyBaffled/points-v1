@@ -79,7 +79,9 @@ const hasChildren = node => !_.isEmpty(node.children);
 
 const getNodeText = node =>
     node.value
-        ? node.value
+        ? node.type === 'linkReference'
+            ? `[${node.value}]`
+            : node.value
         : hasChildren(node)
         ? _.map(node.children.filter(n => n.type !== 'list'), getNodeText).join(
               ' '
