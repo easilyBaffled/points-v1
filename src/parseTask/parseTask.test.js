@@ -44,12 +44,14 @@ describe('Parse Task Text', () => {
         textList = flattenByProp(
             markdownAst.flatMap(ast => flattenByProp(ast, 'children')),
             'children'
-        ).map(n => n.text);
+        )[0]
+            .map(n => console.ident(n).text)
+            .filter(v => v);
     });
 
     test('node has a complete text attribute', () => {
-        console.log(flattenedNodes);
-        const expected = findById(flattenedNodes, '3');
+        console.log(textList);
+        // const expected = findById(flattenedNodes, '3');
         const actual = taskNode;
 
         // expect(actual).toMatchObject(expected);

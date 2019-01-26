@@ -11,9 +11,8 @@ export function flattenByProp(obj, prop) {
 }
 
 export const findById = (nodeList, id) =>
-    _.find(
-        nodeList,
-        n => n.text && (n.text.includes(`#${id}`) || n.text.includes(`@${id}`))
+    _.find(nodeList, n =>
+        new RegExp(`#${id}|@${id}`).test(typeof n === 'string' ? n : n.text)
     );
 
 export const standardNode = {
