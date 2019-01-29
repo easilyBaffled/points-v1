@@ -1,4 +1,5 @@
 import match from 'match-by';
+import _ from 'lodash';
 
 import {
     currentProjectOnlyReducers,
@@ -7,8 +8,8 @@ import {
     SITUATION_MATCHERS,
     preparedMatchers
 } from './parsingSituationReducers';
+import { parseTaskText } from '../parseTask';
 import { objToBitKey } from '../util';
-import _ from 'lodash';
 
 /**
  * @typedef AstNode
@@ -79,9 +80,9 @@ const hasChildren = node => !_.isEmpty(node.children);
 
 const getNodeText = node =>
     node.value
-        ? node.type === 'linkReference'
-            ? `[${node.value}]`
-            : node.value
+        ? node.value
+        : node.type === 'linkReference'
+        ? `[${node.label}]`
         : hasChildren(node)
         ? _.map(node.children.filter(n => n.type !== 'list'), getNodeText).join(
               ' '
@@ -106,7 +107,9 @@ const cleanNode = ({
 }) => {
     const formattedNode = {
         type,
-        text: type !== 'list' ? getNodeText({ value, children }) : '',
+        ...parseTaskText(
+            type !== 'list' ? getNodeText({ value, children }) : ''
+        ),
         children: (type !== 'list' ? childNodes : children).map(n =>
             cleanNode(n)
         ),

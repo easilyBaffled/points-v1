@@ -1,6 +1,6 @@
 import _ from 'lodash';
-import { polyfill } from '../util/console.ident';
-polyfill();
+
+console.ident = (v, l = '') => (console.log(l, v), v);
 
 expect.extend({
     toBeEmpty(actual) {
